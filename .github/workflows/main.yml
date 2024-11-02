@@ -30,7 +30,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
           source: "deploy.sh"
-          target: "/home/ubuntu/deploy.sh"
+          target: "/home/ubuntu/"
 
       - name: Execute File
         uses: appleboy/ssh-action@v1.1.0
