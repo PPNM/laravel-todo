@@ -3,14 +3,12 @@ on:
   push:
     branches:
       - master
-
 jobs:
-  create_upload_execute_deploy_sh:
+  create_and_upload_deploy_sh:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - uses: actions/checkout@v2
-      
+      - uses: actions/checkout@v2      
       - name: Create deploy.sh
         run: |
           echo "#!/bin/bash
@@ -23,24 +21,23 @@ jobs:
           npm run build
           php artisan migrate --force
           php artisan optimize
-          echo 'Deployment Finished'" > deploy.sh       
-         
+          echo 'Deployment Finished'" > deploy.sh  
+      
       - name: Upload File
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
-          port: ${{ secrets.PORT }}
           source: "deploy.sh"
           target: "/home/ubuntu/deploy.sh"
 
-        - name: Execute File
-          uses: appleboy/ssh-action@v1.1.0
-          with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            key: ${{ secrets.SSHKEY }}
-            script: |
+      - name: Execute File
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          script: |
             chmod +x /home/ubuntu/deploy.sh
-            cd /home/ubuntu/me && ./deploy.sh
+            cd /home/ubuntu && ./deploy.sh
