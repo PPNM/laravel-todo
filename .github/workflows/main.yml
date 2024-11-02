@@ -14,7 +14,7 @@ jobs:
           echo "#!/bin/bash
           set -e
           echo 'Deployment Started...'
-          cd /var/www/html/laravel-todo-kt/
+          cd /var/www/html/laravel-todo/
           git pull
           composer install
           npm install
