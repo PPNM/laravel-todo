@@ -1,0 +1,38 @@
+name: Laravel Deploy with GitHub Action
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  create_and_upload_deploy_sh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create deploy.sh
+        run: |
+          echo "#!/bin/bash
+          set -e
+          echo 'Deployment Started...'
+          cd /var/www/html/laravel-todo-kt/
+          git pull
+          composer install
+          npm install
+          npm run build
+          php artisan migrate --force
+          php artisan optimize
+          echo 'Deployment Finished'" > deploy.sh
+          
+         
+      - name: Upload and Execute deploy.sh
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          run:  cp deploy.sh /home/ubuntu/
+          script: |
+            chmod +x deploy.sh
+            cd /home/ubuntu/me && ./deploy.sh
