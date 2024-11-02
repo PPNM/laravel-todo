@@ -32,7 +32,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
-          run:  cp deploy.sh /home/ubuntu/
           script: |
+            cp deploy.sh /home/ubuntu/
             chmod +x deploy.sh
             cd /home/ubuntu/me && ./deploy.sh
